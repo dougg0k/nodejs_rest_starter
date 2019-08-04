@@ -1,0 +1,13 @@
+.env.example
+.gitignore
+README.md
+tslint.json
+pgdata/
+node_modules/
+.git
+logs
+*.log
+.idea/
+.vscode/
+.vs/
+build/

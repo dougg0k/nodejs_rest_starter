@@ -1,0 +1,13 @@
+.idea
+*.log
+logs/
+npm-debug.log*
+node_modules/
+.vscode/
+.vs/
+dist/
+pids
+*.pid
+*.seed
+pgdata/
+.env

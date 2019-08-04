@@ -1,0 +1,64 @@
+{
+	"name": "nodejs-rest-starter",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"start": "cross-env NODE_ENV=development ts-node-dev --respawn --no-notify src/index.ts",
+		"debug": "cross-env NODE_ENV=development node -r ts-node-dev/register --inspect-brk src/index.ts",
+		"test": "cross-env NODE_ENV=test mocha -r ts-node-dev --no-notify tests/**/*.test.ts --reporter spec",
+		"test:watch": "cross-env NODE_ENV=test mocha -r ts-node-dev --no-notify tests/**/*.test.ts --reporter spec --watch",
+		"build": "rimraf ./dist && tsc -b",
+		"lint": "eslint . --ext .ts --fix",
+		"typeorm": "node ./node_modules/typeorm/cli.js"
+	},
+	"dependencies": {
+		"@hapi/boom": "^7.4.2",
+		"argon2": "^0.24.0",
+		"dotenv": "^8.0.0",
+		"fast-json-stringify": "^1.15.4",
+		"fastify": "^2.7.1",
+		"fastify-cors": "^2.1.3",
+		"fastify-helmet": "^3.0.1",
+		"fastify-jwt": "^1.0.0",
+		"fastify-rate-limit": "^2.2.0",
+		"log-process-errors": "^5.0.2",
+		"pg": "^7.12.0",
+		"reflect-metadata": "^0.1.13",
+		"socket.io": "^2.2.0",
+		"typeorm": "^0.2.18"
+	},
+	"devDependencies": {
+		"@types/chai": "^4.1.7",
+		"@types/dotenv": "^6.1.1",
+		"@types/fastify-rate-limit": "^2.0.0",
+		"@types/hapi__boom": "^7.4.0",
+		"@types/log-process-errors": "^4.1.0",
+		"@types/mocha": "^5.2.7",
+		"@types/node": "^12.6.9",
+		"@types/sinon": "^7.0.13",
+		"@types/socket.io": "^2.1.2",
+		"@typescript-eslint/eslint-plugin": "^1.13.0",
+		"@typescript-eslint/parser": "^1.13.0",
+		"chai": "^4.2.0",
+		"chai-http": "^4.3.0",
+		"cross-env": "^5.2.0",
+		"eslint": "^6.1.0",
+		"eslint-config-prettier": "^6.0.0",
+		"eslint-plugin-prettier": "^3.1.0",
+		"eslint-plugin-security": "^1.4.0",
+		"husky": "^3.0.2",
+		"mocha": "^6.2.0",
+		"prettier": "^1.18.2",
+		"rimraf": "^2.6.3",
+		"sinon": "^7.4.0",
+		"sinon-chai": "^3.3.0",
+		"ts-node-dev": "^1.0.0-pre.40",
+		"typescript": "^3.5.3"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "",
+			"pre-push": ""
+		}
+	}
+}

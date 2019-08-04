@@ -1,0 +1,47 @@
+image: docker:latest
+services:
+- docker:dind
+
+stages:
+- build
+- release
+
+variables:
+  GIT_SHA: $(git rev-parse HEAD)
+  CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+  DOCKER_IMAGE_NAME: image-name
+  DOCKER_USER: your-user
+  GCLOUD_PROJECT_NAME: project-id # Add the project ID you get in the Google Cloud Console
+  GCLOUD_PROJECT_ZONE: project-location # Add the project Location you choose when you created the project
+  GCLOUD_CLUSTER_NAME: cluster-name
+
+# OpenSSL command in the before_script is to decrypt the service-account.json file that you need to encrypt before commiting to a git repo
+# You will only commit the encrypted file service-account.json.enc and you can delete the json file afterwards.
+# To encrypt the file use: openssl aes-256-cbc -k "a_very_hard_secret" -in service-account.json -out service-account.json.enc
+# You will have one by going to GCloud API Manager -> Credentials, and select Create credentials -> Service account key.
+
+before_script:
+  - openssl aes-256-cbc -k $DECRYPT_SECRET -in service-account.json.enc -out service-account.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json
+  - gcloud config set project $GCLOUD_PROJECT_NAME
+  - gcloud config set compute/zone $GCLOUD_PROJECT_ZONE
+  - gcloud container clusters get-credentials $GCLOUD_CLUSTER_NAME
+  - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin
+
+build:
+  stage: build
+  script:
+    - docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:latest -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$GIT_SHA -f ./Dockerfile ./
+    - docker push $DOCKER_USER/$DOCKER_IMAGE_NAME:latest
+    - docker push $DOCKER_USER/$DOCKER_IMAGE_NAME:$GIT_SHA
+
+release:
+  stage: release
+  script:
+    - kubectl apply -f k8s
+    - kubectl set image deployments/server-deployment server=$DOCKER_USER/$DOCKER_IMAGE_NAME:$GIT_SHA
+  only:
+    - master
