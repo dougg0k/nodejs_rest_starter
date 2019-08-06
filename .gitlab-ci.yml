@@ -1,10 +1,10 @@
 image: docker:latest
 services:
-- docker:dind
+  - docker:dind
 
 stages:
-- build
-- release
+  - build
+  - release
 
 variables:
   GIT_SHA: $(git rev-parse HEAD)
@@ -23,6 +23,7 @@ variables:
 before_script:
   - openssl aes-256-cbc -k $DECRYPT_SECRET -in service-account.json.enc -out service-account.json -d
   - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - curl -L https://git.io/get_helm.sh | bash > /dev/null;
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file service-account.json
@@ -37,11 +38,12 @@ build:
     - docker build -t $DOCKER_USER/$DOCKER_IMAGE_NAME:latest -t $DOCKER_USER/$DOCKER_IMAGE_NAME:$GIT_SHA -f ./Dockerfile ./
     - docker push $DOCKER_USER/$DOCKER_IMAGE_NAME:latest
     - docker push $DOCKER_USER/$DOCKER_IMAGE_NAME:$GIT_SHA
+    - helm template k8s --output-dir=./k8s/manifests
 
 release:
   stage: release
   script:
-    - kubectl apply -f k8s
+    - kubectl apply -f k8s/manifests/server/templates
     - kubectl set image deployments/server-deployment server=$DOCKER_USER/$DOCKER_IMAGE_NAME:$GIT_SHA
   only:
     - master

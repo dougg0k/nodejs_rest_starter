@@ -20,7 +20,7 @@ spec:
         - name: postgres
           image: postgres
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.dbPort }}
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data

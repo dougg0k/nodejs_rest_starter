@@ -15,21 +15,21 @@ metadata:
 spec:
   tls:
     - hosts:
-        - your-domain.com
-        - www.your-domain.com
-      secretName: your-domain-com
+        - {{ .Values.domain }}
+        - {{ .Values.wwwDomain }}
+      secretName: {{ .Values.domainAsName }}
   rules:
-    - host: your-domain.com
+    - host: {{ .Values.domain }}
       http:
         paths:
           - path: /api/?(.*)
             backend:
               serviceName: server-cluster-ip-service
-              servicePort: 5000
-    - host: www.your-domain.com
+              servicePort: {{ .Values.serverPort }}
+    - host: {{ .Values.wwwDomain }}
       http:
         paths:
           - path: /api/?(.*)
             backend:
               serviceName: server-cluster-ip-service
-              servicePort: 5000
+              servicePort: {{ .Values.serverPort }}

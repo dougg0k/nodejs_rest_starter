@@ -7,5 +7,5 @@ spec:
   selector:
     component: server
   ports:
-    - port: 5000
-      targetPort: 5000
+    - port: {{ .Values.serverPort }}
+      targetPort: {{ .Values.serverPort }}

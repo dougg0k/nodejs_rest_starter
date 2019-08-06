@@ -1,0 +1,10 @@
+domain: your-domain.com
+wwwDomain: www.your-domain.com
+domainAsName: your-domain-com
+issuerEmail: your@email.com
+serverDockerImage: your-docker-user/your-docker-image
+storageClaimSize: 2Gi
+serverPort: 5000
+serverReplicas: 4
+dbPort: 5432
+dbName: starter

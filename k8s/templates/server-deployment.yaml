@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: server-deployment
 spec:
-  replicas: 4
+  replicas: {{ .Values.serverReplicas }}
   selector:
     matchLabels:
       component: server
@@ -14,18 +14,18 @@ spec:
     spec:
       containers:
         - name: server
-          image: your-docker-user/your-docker-image
+          image: {{ .Values.serverDockerImage }}
           ports:
-            - containerPort: 5000
+            - containerPort: {{ .Values.serverPort }}
           env:
             - name: PGUSER
               value: postgres
             - name: PGHOST
               value: postgres-cluster-ip-service
             - name: PGPORT
-              value: '5432'
+              value: {{ .Values.dbPort }}
             - name: PGDATABASE
-              value: your_db
+              value: {{ .Values.dbName }}
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
