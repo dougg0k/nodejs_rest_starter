@@ -8,7 +8,9 @@
 		"test": "cross-env NODE_ENV=test mocha -r ts-node-dev --no-notify tests/**/*.test.ts --reporter spec",
 		"test:watch": "cross-env NODE_ENV=test mocha -r ts-node-dev --no-notify tests/**/*.test.ts --reporter spec --watch",
 		"build": "rimraf ./dist && tsc -b",
-		"lint": "eslint . --ext .ts --fix",
+		"lint:code": "eslint . --ext .ts --fix",
+		"lint:style": "prettier --check src/**/*.ts",
+		"lint": "npm run lint:code && npm run lint:style",
 		"typeorm": "node ./node_modules/typeorm/cli.js"
 	},
 	"dependencies": {
